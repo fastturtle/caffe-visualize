@@ -42,13 +42,6 @@ def main():
     args = parser.parse_args()
     # return
 
-    if args.save is not None:
-        import matplotlib
-	print "Using Agg"
-        matplotlib.use("Agg")
-        
-    import matplotlib.pyplot as plt
-
     iters = []
     params = defaultdict(list)
     for niters, net in all_nets(args.snapshot_dir, args.deployfile):
