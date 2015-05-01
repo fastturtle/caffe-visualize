@@ -109,7 +109,7 @@ def main():
     viz.plot()
 
     if args.save is not None:
-        plt.savefig(args.save)
+        plt.savefig(args.save, dpi=300)
     else:
         plt.show()
 
