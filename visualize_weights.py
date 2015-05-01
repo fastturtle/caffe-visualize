@@ -44,6 +44,7 @@ def main():
 
     if args.save is not None:
         import matplotlib
+	print "Using Agg"
         matplotlib.use("Agg")
         
     import matplotlib.pyplot as plt
@@ -67,7 +68,7 @@ def main():
         plt.plot(iters, filter_params)
 
     if args.save is not None:
-        plt.savefig(args.save)
+        plt.savefig(args.save, dpi=300)
     else:
         plt.show()
 
