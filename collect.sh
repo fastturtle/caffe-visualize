@@ -43,12 +43,12 @@ while getopts ":hs:d:c:" opt; do
             DEPLOY_FILE=$OPTARG
             echo $DEPLOY_FILE
             ;;
-        c)
-            check_directory $OPTARG
-            if [[ ":$PYTHONPATH:" != *":$OPTARG:"* ]]; then
-                export PYTHONPATH="${PYTHONPATH:+"$PYTHONPATH:"}$OPTARG"
-            fi
-            ;;
+        # c)
+        #     check_directory $OPTARG
+        #     if [[ ":$PYTHONPATH:" != *":$OPTARG:"* ]]; then
+        #         export PYTHONPATH="${PYTHONPATH:+"$PYTHONPATH:"}$OPTARG"
+        #     fi
+        #     ;;
         :)
             echo "Option -$OPTARG requires an argument" >&2
             exit 1
