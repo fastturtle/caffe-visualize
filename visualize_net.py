@@ -12,12 +12,16 @@ from utils import get_net
 
 class NetVisualizer(_Visualizer):
 
-    def __init__(self, net, *args, **kwargs):
+    def __init__(self, modelfile, deployfile, *args, **kwargs):
         super(NetVisualizer, self).__init__(*args, **kwargs)
-        self.net = net
+        self.net = get_net(modelfile, deployfile)
 
 
 class KernelVisualizer(NetVisualizer):
+
+    def __init__(self, *args, **kwargs):
+        super(KernelVisualizer, self).__init__(*args, **kwargs)
+        self.cmd = "%s for %s" %(self.cmd, kwargs["modelfile"])
 
     def data(self):
         return self.net.params["conv1"][0].data
@@ -105,7 +109,7 @@ def main():
     plt.rcParams['image.cmap'] = 'gray'
 
     
-    viz = KernelVisualizer(get_net(args.modelfile, args.deployfile), cmd="Test")
+    viz = KernelVisualizer(args.modelfile, args.deployfile, cmd="Kernels")
     viz.plot()
 
     if args.save is not None:

@@ -4,7 +4,6 @@ import os
 import argparse
 from collections import defaultdict
 import matplotlib.pyplot as plt
-# sys.path.insert(0, "/home/gabe/caffe/python")
 import caffe
 
 from utils import get_net
