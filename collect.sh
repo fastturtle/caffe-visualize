@@ -64,9 +64,9 @@ shift $((OPTIND - 1))
 
 # Activate our virtual environment
 # source $HOME/venvs/caffe/bin/activate
-check_directory $1
+# check_directory $1
 # Start running analysis
-for taskdir in $1; do
+for taskdir in $@; do
 	task=$(basename $taskdir)
 	echo "Collecting statistics for $task"
 	mkdir -p out/$task
