@@ -21,7 +21,7 @@ class KernelVisualizer(NetVisualizer):
 
     def __init__(self, *args, **kwargs):
         super(KernelVisualizer, self).__init__(*args, **kwargs)
-        self.cmd = "%s for %s" %(self.cmd, kwargs["modelfile"])
+        self.cmd = "%s for %s" %(self.cmd, args[0])  # args[0] is always the modelfile
 
     def data(self):
         return self.net.params["conv1"][0].data
