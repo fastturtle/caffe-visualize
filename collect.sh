@@ -4,7 +4,7 @@ check_exists() {
     if [ ! -e $1 ]; then
         echo "$1 does not exist" >&2
         exit 1
-    fi     
+    fi
 }
 
 check_file() {
@@ -13,7 +13,7 @@ check_file() {
     if [ ! -f $1 ]; then
         echo "$1 is not a file" >&2
         exit 1
-    fi 
+    fi
 }
 
 check_directory() {
@@ -21,7 +21,7 @@ check_directory() {
     if [ ! -d $1 ]; then
         echo "$1 is not a directory" >&2
         exit 1
-    fi 
+    fi
 }
 
 SNAPSHOT_DIR="snapshots"
@@ -64,6 +64,6 @@ for taskdir in $@; do
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log
-	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt > stdout.log 2> stderr.log
+	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log
 done
 
