@@ -43,12 +43,6 @@ while getopts ":hs:d:c:" opt; do
             DEPLOY_FILE=$OPTARG
             echo $DEPLOY_FILE
             ;;
-        # c)
-        #     check_directory $OPTARG
-        #     if [[ ":$PYTHONPATH:" != *":$OPTARG:"* ]]; then
-        #         export PYTHONPATH="${PYTHONPATH:+"$PYTHONPATH:"}$OPTARG"
-        #     fi
-        #     ;;
         :)
             echo "Option -$OPTARG requires an argument" >&2
             exit 1
@@ -61,9 +55,6 @@ done
 # Pop the arguments parsed by getopts off the argument stack
 shift $((OPTIND - 1))
 
-
-# Activate our virtual environment
-# source $HOME/venvs/caffe/bin/activate
 # check_directory $1
 # Start running analysis
 for taskdir in $@; do
@@ -73,6 +64,6 @@ for taskdir in $@; do
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log
-	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt >> stdout.log 2> stderr.log
+	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt > stdout.log 2> stderr.log
 done
 

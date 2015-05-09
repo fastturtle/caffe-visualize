@@ -29,7 +29,7 @@ class KernelVisualizer(NetVisualizer):
 
 class OutputVisualizer(NetVisualizer):
 
-    def __init__(self, imagedir, image_limit, *args, **kwargs):
+    def __init__(self, modelfile, deployfile, imagedir, image_limit, **kwargs):
         super(OutputVisualizer, self).__init__(*args, **kwargs)
 
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
@@ -72,6 +72,9 @@ class FilterVisualizer(NetVisualizer):
 
         return scores
 
+def get_visualizer(cmd):
+    return globals()[cmd.capitalize()]
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -79,12 +82,17 @@ def main():
                         help="Model file to use")
     parser.add_argument("deployfile",
                         help="Deploy file to use")
+    parser.add_argument("command",
+                        help="Command to be executed")
     # parser.add_argument("nstates",
     #                     type=int,
     #                     help="Number of states. Used to determine image folder.")
     # parser.add_argument("niters",
     #                     type=int,
     #                     help="Number of iterations for snapshot")
+    parser.add_argument("--images",
+                        type=str,
+                        help="Images to use for OutputVisualizer")
     parser.add_argument("--limit",
                         type=int,
                         default=10,
@@ -108,10 +116,18 @@ def main():
     plt.rcParams['image.interpolation'] = 'nearest'
     plt.rcParams['image.cmap'] = 'gray'
 
-    
-    viz = KernelVisualizer(args.modelfile, args.deployfile, cmd="Kernels")
-    viz.plot()
+    cmd = args.command.lower()
+    if cmd == "kernel":
+        viz = KernelVisualizer(args.modelfile, args.deployfile)
+    elif cmd == "output":
+        viz = OutputVisualizer(args.modelfile, args.deployfile, args.images, args.limit)
+    elif cmd == "filter":
+        raise NotImplementedError("FilterVisualizer isn't yet implemented.")
+        return
+    else:
+        raise ValueError("Invalid command.")
 
+    viz.plot()
     if args.save is not None:
         plt.savefig(args.save, dpi=300)
     else:
@@ -119,4 +135,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
