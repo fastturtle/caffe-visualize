@@ -30,10 +30,11 @@ class KernelVisualizer(NetVisualizer):
 class OutputVisualizer(NetVisualizer):
 
     def __init__(self, modelfile, deployfile, imagedir, image_limit, **kwargs):
+        shuffle = kwargs.pop("shuffle")
         super(OutputVisualizer, self).__init__(modelfile, deployfile, **kwargs)
 
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
-        if kwargs.pop("shuffle") is True:
+        if shuffle is True:
             np.random.shuffle(self.images)
         self.ncols = 2
 
