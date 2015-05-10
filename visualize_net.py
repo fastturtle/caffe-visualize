@@ -30,7 +30,7 @@ class KernelVisualizer(NetVisualizer):
 class OutputVisualizer(NetVisualizer):
 
     def __init__(self, modelfile, deployfile, imagedir, image_limit, **kwargs):
-        super(OutputVisualizer, self).__init__(*args, **kwargs)
+        super(OutputVisualizer, self).__init__(**kwargs)
 
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
         if kwargs.pop("shuffle") is True:
