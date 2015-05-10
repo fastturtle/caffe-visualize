@@ -26,7 +26,7 @@ check_directory() {
 
 SNAPSHOT_DIR="snapshots"
 DEPLOY_FILE="deploy.prototxt"
-while getopts ":hs:d:c:" opt; do
+while getopts ":hs:d:c:i:" opt; do
     case $opt in
         h)
             # TODO: Improve help message
@@ -43,6 +43,9 @@ while getopts ":hs:d:c:" opt; do
             DEPLOY_FILE=$OPTARG
             echo $DEPLOY_FILE
             ;;
+        i)
+            check_directory $OPTARG
+            IMAGES_DIR=$OPTARG
         :)
             echo "Option -$OPTARG requires an argument" >&2
             exit 1
@@ -65,6 +68,8 @@ for taskdir in $@; do
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log
 	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log
-	python visualize_net.py --save out/$task/output.jpg --images $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
+    if [-nz "$IMAGES_DIR" ]; then
+    	python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
+    fi
 done
 
