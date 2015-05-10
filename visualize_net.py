@@ -8,7 +8,7 @@ import math
 import caffe
 
 from visualize import _Visualizer
-from utils import get_net
+from utils import get_net, get_inputs
 
 class NetVisualizer(_Visualizer):
 
