@@ -36,16 +36,15 @@ while getopts ":hs:d:c:i:" opt; do
         s)
             check_directory $OPTARG
             SNAPSHOT_DIR=$OPTARG
-            echo $SNAPSHOT_DIR
             ;;
         d)
             check_file $OPTARG
             DEPLOY_FILE=$OPTARG
-            echo $DEPLOY_FILE
             ;;
         i)
             check_directory $OPTARG
             IMAGES_DIR=$OPTARG
+            ;;
         :)
             echo "Option -$OPTARG requires an argument" >&2
             exit 1
