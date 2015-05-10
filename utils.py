@@ -1,7 +1,7 @@
 import numpy as np
 import os.path
 import caffe
-
+import glob
 
 def get_inputs(input_file, ext, limit=None, **kwargs):
     input_file = os.path.expanduser(input_file)

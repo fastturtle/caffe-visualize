@@ -57,18 +57,33 @@ done
 # Pop the arguments parsed by getopts off the argument stack
 shift $((OPTIND - 1))
 
-# check_directory $1
+# We use this file to store the PIDs of the spawned subprocesses
+# and want to make sure it's empty.
+rm -f .caffe.pids
 # Start running analysis
 for taskdir in $@; do
 	task=$(basename $taskdir)
 	echo "Collecting statistics for $task"
 	mkdir -p out/$task
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
+
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log &
+    echo $! >> .caffe.pids
+
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log &
+    echo $! >> .caffe.pids
+
 	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log &
+    echo $! >> .caffe.pids
+
     if [ -n "$IMAGES_DIR" ]; then
-    	python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log &
+        python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log &
+        echo $! >> .caffe.pids
     fi
 done
-wait
+
+# Wait for all jobs to stop
+while read -r line
+do
+        wait $line
+done < .caffe.pids
