@@ -64,6 +64,7 @@ for taskdir in $@; do
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log
-	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt > stdout.log 2> stderr.log
+	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log
+	python visualize_net.py --save out/$task/output.jpg --images $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
 done
 
