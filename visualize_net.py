@@ -33,6 +33,8 @@ class OutputVisualizer(NetVisualizer):
         super(OutputVisualizer, self).__init__(*args, **kwargs)
 
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
+        if kwargs.pop("shuffle") is True:
+            np.random.shuffle(self.images)
         self.ncols = 2
 
     def data(self):
@@ -104,6 +106,9 @@ def main():
                         type=int,
                         default=10000,
                         help="The number of iterations to jumps when browsing models")
+    parser.add_argument("--shuffle",
+                        action="store_true",
+                        help="Shuffles the images if using the OutputVisualizer")
 
     args = parser.parse_args()
 
@@ -120,7 +125,8 @@ def main():
     if cmd == "kernel":
         viz = KernelVisualizer(args.modelfile, args.deployfile)
     elif cmd == "output":
-        viz = OutputVisualizer(args.modelfile, args.deployfile, args.images, args.limit)
+        viz = OutputVisualizer(args.modelfile, args.deployfile, args.images,
+                               args.limit, shuffle=args.shuffle)
     elif cmd == "filter":
         raise NotImplementedError("FilterVisualizer isn't yet implemented.")
         return
