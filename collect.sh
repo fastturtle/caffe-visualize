@@ -68,24 +68,24 @@ for taskdir in $@; do
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
 
 	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log &
-    echo "$task $!" >> .caffe.pids
+    echo "$task/weights-conv1 $!" >> .caffe.pids
 
 	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log &
-    echo "$task $!" >> .caffe.pids
+    echo "$task/weights-conv2 $!" >> .caffe.pids
 
 	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log &
-    echo "$task $!" >> .caffe.pids
+    echo "$task/filters $!" >> .caffe.pids
 
     if [ -n "$IMAGES_DIR" ]; then
         python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log &
-        echo "$task $!" >> .caffe.pids
+        echo "$task/output $!" >> .caffe.pids
     fi
 done
 
 # Wait for all jobs to stop
 while read -r line
 do
-        $linearray=($line)
+        linearray=($line)
         echo "Waiting for task ${linearray[0]}"
         wait ${linearray[1]}
 done < .caffe.pids
