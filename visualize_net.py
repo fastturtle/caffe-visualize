@@ -33,7 +33,9 @@ class OutputVisualizer(NetVisualizer):
         shuffle = kwargs.pop("shuffle")
         super(OutputVisualizer, self).__init__("Output", modelfile, deployfile, **kwargs)
 
+        print "Getting images from %s" % imagedir
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
+        print "Obtained images", len(self.images)
         if shuffle is True:
             np.random.shuffle(self.images)
         self.ncols = 2
@@ -87,12 +89,6 @@ def main():
                         help="Deploy file to use")
     parser.add_argument("command",
                         help="Command to be executed")
-    # parser.add_argument("nstates",
-    #                     type=int,
-    #                     help="Number of states. Used to determine image folder.")
-    # parser.add_argument("niters",
-    #                     type=int,
-    #                     help="Number of iterations for snapshot")
     parser.add_argument("--images",
                         type=str,
                         help="Images to use for OutputVisualizer")
@@ -112,12 +108,6 @@ def main():
                         help="Shuffles the images if using the OutputVisualizer")
 
     args = parser.parse_args()
-
-    # Remove trailing "/" from path
-    # basedir = args.base_dir[:-1] if args.base_dir[-1] == "/" else args.base_dir
-
-    # imgs = get_images("%s/images/%dstates" % (basedir, args.nstates),
-    #                   args.output_limit)
 
     plt.rcParams['image.interpolation'] = 'nearest'
     plt.rcParams['image.cmap'] = 'gray'
