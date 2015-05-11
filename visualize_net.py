@@ -20,18 +20,20 @@ class NetVisualizer(_Visualizer):
 class KernelVisualizer(NetVisualizer):
 
     def __init__(self, *args, **kwargs):
-        super(KernelVisualizer, self).__init__("Kernel", *args, **kwargs)
+        super(KernelVisualizer, self).__init__("Kernel", *args, tight_layout=True, **kwargs)
         self.cmd = "%s for %s" %(self.cmd, args[0])  # args[0] is always the modelfile
 
     def data(self):
         return self.net.params["conv1"][0].data
 
+    def subplot_title(self, i, nrows, ncols):
+        return "Kernels for conv1 layer" % i
 
 class OutputVisualizer(NetVisualizer):
 
     def __init__(self, modelfile, deployfile, imagedir, image_limit, **kwargs):
         shuffle = kwargs.pop("shuffle")
-        super(OutputVisualizer, self).__init__("Output", modelfile, deployfile, **kwargs)
+        super(OutputVisualizer, self).__init__("Output", modelfile, deployfile, tight_layout=True, **kwargs)
 
         self.images = get_inputs(imagedir, "jpg", limit=image_limit, color=False, shuffle=shuffle)
         self.ncols = 2
@@ -47,6 +49,9 @@ class OutputVisualizer(NetVisualizer):
             scores.append(score.copy())
 
         return scores
+
+    def subplot_title(self, i, nrows, ncols):
+        return "Reconstruction %d" % i if i % 2 == 0 else "Output %d" % i
 
 
 class FilterVisualizer(NetVisualizer):

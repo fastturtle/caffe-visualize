@@ -71,6 +71,6 @@ for taskdir in $@; do
 	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log
 
     if [ -n "$IMAGES_DIR" ]; then
-        python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
+        python visualize_net.py --save out/$task/output.jpg --shuffle --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
     fi
 done

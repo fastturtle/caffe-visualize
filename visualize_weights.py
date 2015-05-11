@@ -5,6 +5,7 @@ import argparse
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import caffe
+import math
 
 from utils import get_net
 
@@ -49,16 +50,24 @@ def main():
 
         iter_params = net.params[args.layer][0].data
         for filter_num in xrange(len(iter_params)):
-            params[filter_num].append(iter_params[filter_num].flatten())
+            params[filter_num + 1].append(iter_params[filter_num].flatten())
 
-        # iter_params = net.params["deconv1"][0].data
-        # for filter_num in xrange(len(iter_params)):
-        #   params[filter_num + len(iter_params)].append(iter_params[filter_num].flatten())
-
+    fig = plt.figure(figsize=(10, 10))
+    ncols = int(math.sqrt(len(params)))
+    nrows = len(params) / ncols + len(params) % ncols
     for filter_num, filter_params in params.iteritems():
-        ax = plt.subplot(4, 4, filter_num)
-        ax.set_title("Filter %d" % filter_num)
+        # Set the xticks to visible only if there are no
+        # subplots below the current one
+        if (filter_num - 1) + ncols >= len(params):
+            visible = True
+        else:
+            visible = False
+
+        ax = fig.add_subplot(nrows, ncols, filter_num)
+        ax.set_title("Filter %d" % filter_num, fontsize=8)
         plt.plot(iters, filter_params)
+        plt.setp(ax.get_yticklabels(), visible=False)
+        plt.setp(ax.get_xticklabels(), visible=visible, rotation=90, fontsize=6)
 
     if args.save is not None:
         plt.savefig(args.save, dpi=300)
