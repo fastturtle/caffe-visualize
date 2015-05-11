@@ -12,15 +12,15 @@ from utils import get_net, get_inputs
 
 class NetVisualizer(_Visualizer):
 
-    def __init__(self, modelfile, deployfile, *args, **kwargs):
-        super(NetVisualizer, self).__init__(*args, **kwargs)
+    def __init__(self, cmd, modelfile, deployfile, *args, **kwargs):
+        super(NetVisualizer, self).__init__(cmd, *args, **kwargs)
         self.net = get_net(modelfile, deployfile)
 
 
 class KernelVisualizer(NetVisualizer):
 
     def __init__(self, *args, **kwargs):
-        super(KernelVisualizer, self).__init__(*args, **kwargs)
+        super(KernelVisualizer, self).__init__("Kernel", *args, **kwargs)
         self.cmd = "%s for %s" %(self.cmd, args[0])  # args[0] is always the modelfile
 
     def data(self):
@@ -31,7 +31,7 @@ class OutputVisualizer(NetVisualizer):
 
     def __init__(self, modelfile, deployfile, imagedir, image_limit, **kwargs):
         shuffle = kwargs.pop("shuffle")
-        super(OutputVisualizer, self).__init__(modelfile, deployfile, **kwargs)
+        super(OutputVisualizer, self).__init__("Output", modelfile, deployfile, **kwargs)
 
         self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
         if shuffle is True:

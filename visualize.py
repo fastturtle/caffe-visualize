@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 class _Visualizer(object):
 
-    def __init__(self, cmd=None):
+    def __init__(self, cmd):
         self.cmd = cmd
         self.ncols = None
 
