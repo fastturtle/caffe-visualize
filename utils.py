@@ -8,7 +8,7 @@ def get_inputs(input_file, ext, limit=None, **kwargs):
     if input_file.endswith('npy'):
         inputs = np.load(input_file)
     elif os.path.isdir(input_file):
-        fnames = sorted(glob.glob(input_file + '/*.' + ext), key=lambda x: int(x.rsplit("/")[-1].split(".")[0]))
+        fnames = sorted(glob.glob(input_file + '/*.' + ext))
         if limit is not None:
             fnames = fnames[:limit]
         inputs =[caffe.io.load_image(im_f, **kwargs)
