@@ -2,13 +2,18 @@ import numpy as np
 import os.path
 import caffe
 import glob
+import random
 
-def get_inputs(input_file, ext, limit=None, **kwargs):
+def get_inputs(input_file, ext, limit=None, shuffle=False, **kwargs):
     input_file = os.path.expanduser(input_file)
     if input_file.endswith('npy'):
         inputs = np.load(input_file)
     elif os.path.isdir(input_file):
-        fnames = sorted(glob.glob(input_file + '/*.' + ext))
+        fnames = glob.glob(input_file + '/*.' + ext)
+        if shuffle:
+            random.shuffle(fnames)
+        else:
+            fnames.sort()
         if limit is not None:
             fnames = fnames[:limit]
         inputs =[caffe.io.load_image(im_f, **kwargs)

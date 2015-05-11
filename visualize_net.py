@@ -33,21 +33,14 @@ class OutputVisualizer(NetVisualizer):
         shuffle = kwargs.pop("shuffle")
         super(OutputVisualizer, self).__init__("Output", modelfile, deployfile, **kwargs)
 
-        print "Getting images from %s" % imagedir
-        self.images = get_inputs(imagedir, "jpg", image_limit, color=False)
-        print "Obtained images", len(self.images)
-        if shuffle is True:
-            np.random.shuffle(self.images)
+        self.images = get_inputs(imagedir, "jpg", limit=image_limit, color=False, shuffle=shuffle)
         self.ncols = 2
 
     def data(self):
         scores = []
         for i, img in enumerate(self.images):
-            # Reshape image
-            img = img.reshape(img.shape[2], img.shape[0], img.shape[1])
             # Add original image
-            print "Image:", img.shape
-            scores.append(img)
+            scores.append(img.reshape(img.shape[2], img.shape[0], img.shape[1]))
 
             # Add reconstructed image
             score = self.net.predict([img], oversample=False)[0]
@@ -79,9 +72,6 @@ class FilterVisualizer(NetVisualizer):
             scores.append(score.copy())
 
         return scores
-
-def get_visualizer(cmd):
-    return globals()[cmd.capitalize()]
 
 
 def main():
