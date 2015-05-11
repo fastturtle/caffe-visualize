@@ -57,9 +57,6 @@ done
 # Pop the arguments parsed by getopts off the argument stack
 shift $((OPTIND - 1))
 
-# We use this file to store the PIDs of the spawned subprocesses
-# and want to make sure it's empty.
-rm -f .caffe.pids
 # Start running analysis
 for taskdir in $@; do
 	task=$(basename $taskdir)
@@ -67,25 +64,13 @@ for taskdir in $@; do
 	mkdir -p out/$task
 	snapshot=$(ls -t $taskdir/snapshots/*.caffemodel | head -1)
 
-	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log &
-    echo "$task/weights-conv1 $!" >> .caffe.pids
+	python visualize_weights.py --save out/$task/weights-conv1.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv1 2> stderr.log
 
-	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log &
-    echo "$task/weights-conv2 $!" >> .caffe.pids
+	python visualize_weights.py --save out/$task/weights-conv2.jpg $taskdir/snapshots/ $taskdir/deploy.prototxt conv2 2> stderr.log
 
-	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log &
-    echo "$task/filters $!" >> .caffe.pids
+	python visualize_net.py --save out/$task/filters.jpg $snapshot $taskdir/deploy.prototxt kernel > stdout.log 2> stderr.log
 
     if [ -n "$IMAGES_DIR" ]; then
-        python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log &
-        echo "$task/output $!" >> .caffe.pids
+        python visualize_net.py --save out/$task/output.jpg --images $IMAGES_DIR $snapshot $taskdir/deploy.prototxt output > stdout.log 2> stderr.log
     fi
 done
-
-# Wait for all jobs to stop
-while read -r line
-do
-        linearray=($line)
-        echo "Waiting for task ${linearray[0]}"
-        wait ${linearray[1]}
-done < .caffe.pids
