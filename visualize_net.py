@@ -44,6 +44,7 @@ class OutputVisualizer(NetVisualizer):
         scores = []
         for i, img in enumerate(self.images):
             # Add original image
+            print "Image:", img.shape
             scores.append(img.reshape(img.shape[2], img.shape[0], img.shape[1]))
 
             # Add reconstructed image
