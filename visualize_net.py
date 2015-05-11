@@ -43,9 +43,11 @@ class OutputVisualizer(NetVisualizer):
     def data(self):
         scores = []
         for i, img in enumerate(self.images):
+            # Reshape image
+            img = img.reshape(img.shape[2], img.shape[0], img.shape[1])
             # Add original image
             print "Image:", img.shape
-            scores.append(img.reshape(img.shape[2], img.shape[0], img.shape[1]))
+            scores.append(img)
 
             # Add reconstructed image
             score = self.net.predict([img], oversample=False)[0]
