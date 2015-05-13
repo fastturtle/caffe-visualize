@@ -27,7 +27,7 @@ class KernelVisualizer(NetVisualizer):
         return self.net.params["conv1"][0].data
 
     def subplot_title(self, i, nrows, ncols):
-        return "Kernels for conv1 layer" % i
+        return "Kernels for conv1 layer"
 
 class OutputVisualizer(NetVisualizer):
 
